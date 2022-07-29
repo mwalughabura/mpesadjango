@@ -8,8 +8,8 @@ from .models import MpesaPayment
 
 
 def getAccessToken(request):
-    consumer_key = 'cHnkwYIgBbrxlgBoneczmIJFXVm0oHky'
-    consumer_secret = '2nHEyWSD4VjpNh2g'
+    consumer_key = '4ynol6GU6pVcCQu9y3P2we9vGzo2m3Vg'
+    consumer_secret = 'JnFX96fOx1zzqyMG'
     api_URL = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
 
     r = requests.get(api_URL, auth=HTTPBasicAuth(consumer_key, consumer_secret))
@@ -17,7 +17,6 @@ def getAccessToken(request):
     validated_mpesa_access_token = mpesa_access_token['access_token']
 
     return HttpResponse(validated_mpesa_access_token)
-
 
 def lipa_na_mpesa_online(request):
     access_token = MpesaAccessToken.validated_mpesa_access_token
@@ -29,11 +28,11 @@ def lipa_na_mpesa_online(request):
         "Timestamp": LipanaMpesaPpassword.lipa_time,
         "TransactionType": "CustomerPayBillOnline",
         "Amount": 1,
-        "PartyA": 254728851119,  # replace with your phone number to get stk push
+        "PartyA": 254705452430, 
         "PartyB": LipanaMpesaPpassword.Business_short_code,
-        "PhoneNumber": 254728851119,  # replace with your phone number to get stk push
+        "PhoneNumber": 254705452430, 
         "CallBackURL": "https://sandbox.safaricom.co.ke/mpesa/",
-        "AccountReference": "Henry",
+        "AccountReference": "RSMS",
         "TransactionDesc": "Testing stk push"
     }
 
@@ -48,8 +47,8 @@ def register_urls(request):
     headers = {"Authorization": "Bearer %s" % access_token}
     options = {"ShortCode": LipanaMpesaPpassword.Business_short_code,
                "ResponseType": "Completed",
-               "ConfirmationURL": "http://127.0.0.1:8000/api/v1/c2b/confirmation",
-               "ValidationURL": "http://127.0.0.1:8000/api/v1/c2b/validation"}
+               "ConfirmationURL": "5f34-197-254-41-78.in.ngrok.io/api/v1/c2b/confirmation",
+               "ValidationURL": "5f34-197-254-41-78.in.ngrok.io/api/v1/c2b/validation"}
     response = requests.post(api_url, json=options, headers=headers)
 
     return HttpResponse(response.text)
@@ -76,15 +75,15 @@ def confirmation(request):
     mpesa_payment = json.loads(mpesa_body)
 
     payment = MpesaPayment(
-        first_name=mpesa_payment['FirstName'],
-        last_name=mpesa_payment['LastName'],
-        middle_name=mpesa_payment['MiddleName'],
-        description=mpesa_payment['TransID'],
-        phone_number=mpesa_payment['MSISDN'],
-        amount=mpesa_payment['TransAmount'],
-        reference=mpesa_payment['BillRefNumber'],
-        organization_balance=mpesa_payment['OrgAccountBalance'],
-        type=mpesa_payment['TransactionType'],
+        first_name = mpesa_payment['FirstName'],
+        last_name = mpesa_payment['LastName'],
+        middle_name = mpesa_payment['MiddleName'],
+        description = mpesa_payment['TransID'],
+        phone_number = mpesa_payment['MSISDN'],
+        amount = mpesa_payment['TransAmount'],
+        reference = mpesa_payment['BillRefNumber'],
+        organization_balance = mpesa_payment['OrgAccountBalance'],
+        type = mpesa_payment['TransactionType'],
 
     )
     payment.save()
