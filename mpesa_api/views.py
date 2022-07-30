@@ -47,8 +47,8 @@ def register_urls(request):
     headers = {"Authorization": "Bearer %s" % access_token}
     options = {"ShortCode": LipanaMpesaPpassword.Business_short_code,
                "ResponseType": "Completed",
-               "ConfirmationURL": "5f34-197-254-41-78.in.ngrok.io/api/v1/c2b/confirmation",
-               "ValidationURL": "5f34-197-254-41-78.in.ngrok.io/api/v1/c2b/validation"}
+               "ConfirmationURL": "localhost:8000/api/v1/c2b/confirmation",
+               "ValidationURL": "localhost:8000/api/v1/c2b/validation"}
     response = requests.post(api_url, json=options, headers=headers)
 
     return HttpResponse(response.text)
